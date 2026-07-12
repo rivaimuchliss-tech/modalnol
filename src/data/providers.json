@@ -1,0 +1,289 @@
+[
+  {
+    "slug": "google-ai-studio",
+    "nama": "Google AI Studio (Gemini)",
+    "website": "https://ai.google.dev",
+    "urlDaftar": "https://aistudio.google.com/apikey",
+    "deskripsi": "API Gemini gratis langsung dari Google. Cukup login pakai akun Google, ambil API key, langsung jalan.",
+    "kategori": ["text", "code", "image", "audio", "embedding"],
+    "modelUnggulan": ["Gemini 2.5 Flash", "Gemini 2.5 Pro", "Gemini 2.5 Flash-Lite"],
+    "batasGratis": {
+      "ringkas": "Tier gratis dengan limit harian per model",
+      "detail": "Contoh Gemini 2.5 Flash (tier gratis): sekitar 10 request/menit, 250 request/hari, 250.000 token/menit. Google tidak lagi mempublikasikan tabel statis — angka pasti ada di dashboard Rate limits AI Studio.",
+      "artiAwam": "Lebih dari cukup untuk belajar, prototipe, dan chatbot personal."
+    },
+    "konteksIndonesia": {
+      "butuhKartuKredit": false,
+      "bisaNomorIndonesia": true,
+      "diblokirRegional": false,
+      "bolehKomersial": true,
+      "catatan": "Indonesia termasuk region yang didukung resmi, tanpa kartu kredit untuk tier gratis. JEBAKAN: pada tier gratis, prompt & respons dipakai Google untuk meningkatkan produk dan bisa dibaca reviewer manusia — jangan kirim data pribadi/rahasia."
+    },
+    "kompatibelOpenAI": true,
+    "endpointCek": "https://generativelanguage.googleapis.com/v1beta/models",
+    "sumberData": [
+      "https://ai.google.dev/gemini-api/docs/rate-limits",
+      "https://ai.google.dev/gemini-api/docs/available-regions",
+      "https://ai.google.dev/gemini-api/terms"
+    ],
+    "terakhirDiverifikasiManual": "2026-07-12"
+  },
+  {
+    "slug": "groq",
+    "nama": "Groq",
+    "website": "https://groq.com",
+    "urlDaftar": "https://console.groq.com",
+    "deskripsi": "Inference super cepat lewat hardware LPU. Free tier tanpa kartu kredit, kompatibel OpenAI.",
+    "kategori": ["text", "code", "audio"],
+    "modelUnggulan": ["Llama 3.3 70B", "Llama 3.1 8B Instant", "Whisper Large v3"],
+    "batasGratis": {
+      "ringkas": "Rate limit per menit & per hari, bervariasi per model",
+      "detail": "Contoh Free Plan: Llama 3.3 70B — 30 request/menit, 1.000 request/hari, 12.000 token/menit; Llama 3.1 8B Instant — 30 request/menit, 14.400 request/hari, 500.000 token/hari.",
+      "artiAwam": "Cukup untuk chatbot personal atau prototipe skala kecil yang butuh respons kilat."
+    },
+    "konteksIndonesia": {
+      "butuhKartuKredit": false,
+      "bisaNomorIndonesia": true,
+      "diblokirRegional": null,
+      "bolehKomersial": true,
+      "catatan": "Daftar cukup email/Google, tanpa verifikasi nomor HP. Membangun aplikasi komersial diizinkan; yang dilarang hanya menjual ulang akses API. Ketersediaan dari region Indonesia belum kami verifikasi resmi."
+    },
+    "kompatibelOpenAI": true,
+    "endpointCek": "https://api.groq.com/openai/v1/models",
+    "sumberData": [
+      "https://console.groq.com/docs/rate-limits",
+      "https://console.groq.com/docs/legal/services-agreement"
+    ],
+    "terakhirDiverifikasiManual": "2026-07-12"
+  },
+  {
+    "slug": "openrouter",
+    "nama": "OpenRouter",
+    "website": "https://openrouter.ai",
+    "urlDaftar": "https://openrouter.ai",
+    "deskripsi": "Satu API key untuk ratusan model dari banyak provider. Ada sejumlah model berlabel ':free'.",
+    "kategori": ["text", "code"],
+    "modelUnggulan": ["Model :free rotasi", "DeepSeek", "Qwen"],
+    "batasGratis": {
+      "ringkas": "Model ':free' dibatasi 20 request/menit & 50 request/hari",
+      "detail": "Model :free: 20 request/menit dan 50 request/hari selama total top-up kredit < US$10. Setelah top-up sekali US$10 (tidak kedaluwarsa), batas harian naik jadi 1.000 request/hari.",
+      "artiAwam": "Enak untuk membandingkan banyak model tanpa daftar ke tiap provider satu per satu."
+    },
+    "konteksIndonesia": {
+      "butuhKartuKredit": false,
+      "bisaNomorIndonesia": true,
+      "diblokirRegional": false,
+      "bolehKomersial": true,
+      "catatan": "Model :free bisa dipakai tanpa kartu kredit & tanpa nomor HP. OpenRouter sendiri tidak memblokir Indonesia, TAPI tiap model punya ketentuan provider aslinya — sebagian model gratis melatih data promptmu atau membatasi komersial. Cek per model."
+    },
+    "kompatibelOpenAI": true,
+    "endpointCek": "https://openrouter.ai/api/v1/models",
+    "sumberData": [
+      "https://openrouter.ai/docs/api/reference/limits",
+      "https://openrouter.ai/terms",
+      "https://openrouter.ai/models?max_price=0"
+    ],
+    "terakhirDiverifikasiManual": "2026-07-12"
+  },
+  {
+    "slug": "cerebras",
+    "nama": "Cerebras",
+    "website": "https://cerebras.ai",
+    "urlDaftar": "https://cloud.cerebras.ai",
+    "deskripsi": "Inference tercepat di kelasnya lewat chip wafer-scale. Free tier untuk developer, kompatibel OpenAI.",
+    "kategori": ["text", "code"],
+    "modelUnggulan": ["gpt-oss-120b", "Z.AI GLM 4.7", "Gemma 4"],
+    "batasGratis": {
+      "ringkas": "Batas request & token per menit/hari untuk tier gratis",
+      "detail": "Free tier per model: sekitar 5 request/menit, 30.000 token/menit, 1 juta token/hari. Konteks dibatasi ~8.192 token. Catatan: llama-3.3-70b sudah TIDAK tersedia — pakai gpt-oss-120b.",
+      "artiAwam": "Ideal untuk mencoba kecepatan ekstrem pada demo dan prototipe kecil."
+    },
+    "konteksIndonesia": {
+      "butuhKartuKredit": false,
+      "bisaNomorIndonesia": true,
+      "diblokirRegional": null,
+      "bolehKomersial": null,
+      "catatan": "Daftar dengan email/OAuth tanpa kartu kredit. Ketersediaan region Indonesia dan izin komersial free tier tidak dinyatakan jelas di dokumentasi resmi — belum kami verifikasi."
+    },
+    "kompatibelOpenAI": true,
+    "endpointCek": "https://api.cerebras.ai/v1/models",
+    "sumberData": [
+      "https://inference-docs.cerebras.ai/support/rate-limits",
+      "https://www.cerebras.ai/terms-of-service"
+    ],
+    "terakhirDiverifikasiManual": "2026-07-12"
+  },
+  {
+    "slug": "cloudflare-workers-ai",
+    "nama": "Cloudflare Workers AI",
+    "website": "https://developers.cloudflare.com/workers-ai/",
+    "urlDaftar": "https://dash.cloudflare.com/sign-up",
+    "deskripsi": "Jalankan model AI di edge Cloudflare. Ada alokasi gratis harian, tanpa kartu kredit untuk mulai.",
+    "kategori": ["text", "code", "image", "embedding"],
+    "modelUnggulan": ["Llama 3.3 70B", "Llama 3.1 8B", "Flux (image)"],
+    "batasGratis": {
+      "ringkas": "Alokasi gratis 10.000 Neurons/hari",
+      "detail": "Free tier: 10.000 Neurons/hari, reset 00:00 UTC (07:00 WIB). Kira-kira ratusan juta token untuk model teks kecil, atau ribuan gambar Flux. Kelebihan hanya bisa dibeli di plan Paid.",
+      "artiAwam": "Pas untuk fitur AI kecil di dalam web/app yang sudah kamu host di Cloudflare."
+    },
+    "konteksIndonesia": {
+      "butuhKartuKredit": false,
+      "bisaNomorIndonesia": true,
+      "diblokirRegional": false,
+      "bolehKomersial": true,
+      "catatan": "Akun Cloudflare gratis tanpa kartu kredit, cukup email. Cloudflare punya PoP di Jakarta — bisa diakses dari Indonesia. Perlu Account ID + API Token untuk memanggil API."
+    },
+    "kompatibelOpenAI": true,
+    "endpointCek": "https://api.cloudflare.com/client/v4/",
+    "sumberData": [
+      "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+      "https://developers.cloudflare.com/workers-ai/configuration/open-ai-compatibility/",
+      "https://www.cloudflare.com/terms/"
+    ],
+    "terakhirDiverifikasiManual": "2026-07-12"
+  },
+  {
+    "slug": "nvidia-nim",
+    "nama": "NVIDIA NIM",
+    "website": "https://build.nvidia.com",
+    "urlDaftar": "https://build.nvidia.com",
+    "deskripsi": "Katalog model siap pakai dari NVIDIA. Dapat kredit gratis untuk developer, endpoint kompatibel OpenAI.",
+    "kategori": ["text", "code", "image", "embedding"],
+    "modelUnggulan": ["Llama 3.3 70B", "DeepSeek R1", "Nemotron"],
+    "batasGratis": {
+      "ringkas": "±1.000 kredit gratis + rate limit ±40 request/menit",
+      "detail": "Akun personal dapat sekitar 1.000 kredit gratis saat daftar dengan rate limit ±40 request/menit. Kredit dipakai per-request (model besar lebih boros). Bisa ajukan kenaikan (±5.000 kredit / 200 RPM) lewat forum developer.",
+      "artiAwam": "Bagus untuk menjajal banyak model open-source kelas atas tanpa perlu GPU sendiri."
+    },
+    "konteksIndonesia": {
+      "butuhKartuKredit": false,
+      "bisaNomorIndonesia": null,
+      "diblokirRegional": false,
+      "bolehKomersial": false,
+      "catatan": "Endpoint gratis khusus prototyping/riset/testing — BUKAN produksi (butuh NVIDIA AI Enterprise). Akun kini butuh verifikasi nomor HP; dukungan +62 belum terkonfirmasi (beberapa negara gagal di dropdown, ada jalur verifikasi manual via forum)."
+    },
+    "kompatibelOpenAI": true,
+    "endpointCek": "https://integrate.api.nvidia.com/v1/models",
+    "sumberData": [
+      "https://build.nvidia.com",
+      "https://docs.api.nvidia.com/nim/docs/product",
+      "https://docs.nvidia.com/nim/large-language-models/latest/api-reference.html"
+    ],
+    "terakhirDiverifikasiManual": "2026-07-12"
+  },
+  {
+    "slug": "github-models",
+    "nama": "GitHub Models",
+    "website": "https://github.com/marketplace/models",
+    "urlDaftar": "https://github.com/marketplace/models",
+    "deskripsi": "Coba banyak model (GPT, Llama, Mistral, dll) langsung dengan akun GitHub-mu. Gratis untuk eksperimen.",
+    "kategori": ["text", "code", "embedding"],
+    "modelUnggulan": ["GPT-4o mini", "GPT-4.1", "Llama 3.3 70B"],
+    "batasGratis": {
+      "ringkas": "Rate limit gratis per tier model (untuk eksperimen)",
+      "detail": "Copilot Free: model tier rendah 15 request/menit & 150 request/hari; tier tinggi 10 request/menit & 50 request/hari. Batas 8.000 token masuk, 4.000 token keluar per request.",
+      "artiAwam": "Cocok buat developer yang sudah punya akun GitHub dan mau cepat menjajal model tanpa daftar baru."
+    },
+    "konteksIndonesia": {
+      "butuhKartuKredit": false,
+      "bisaNomorIndonesia": true,
+      "diblokirRegional": null,
+      "bolehKomersial": false,
+      "catatan": "Gratis khusus prototyping/eksperimen, BUKAN produksi (produksi diarahkan ke Azure AI atau bawa key sendiri). Pakai Personal Access Token (PAT) dengan izin models. Ketersediaan region Indonesia tidak dinyatakan eksplisit."
+    },
+    "kompatibelOpenAI": true,
+    "endpointCek": "https://models.github.ai/catalog/models",
+    "sumberData": [
+      "https://docs.github.com/en/github-models/use-github-models/prototyping-with-ai-models",
+      "https://docs.github.com/en/billing/managing-billing-for-your-products/about-billing-for-github-models"
+    ],
+    "terakhirDiverifikasiManual": "2026-07-12"
+  },
+  {
+    "slug": "mistral-ai",
+    "nama": "Mistral AI",
+    "website": "https://mistral.ai",
+    "urlDaftar": "https://console.mistral.ai",
+    "deskripsi": "Model buatan Prancis dengan plan gratis 'Experiment' di La Plateforme. Kompatibel gaya OpenAI.",
+    "kategori": ["text", "code", "embedding"],
+    "modelUnggulan": ["Mistral Small", "Ministral 8B", "Codestral"],
+    "batasGratis": {
+      "ringkas": "Plan gratis 'Experiment' dengan rate limit terbatas (angka tak dipublikasi)",
+      "detail": "Mistral TIDAK mempublikasikan angka pasti free tier — batas hanya terlihat di halaman Limits setelah login. Plan gratis diposisikan untuk evaluasi & prototipe.",
+      "artiAwam": "Cukup untuk riset dan prototipe non-produksi, termasuk Codestral untuk tugas ngoding."
+    },
+    "konteksIndonesia": {
+      "butuhKartuKredit": false,
+      "bisaNomorIndonesia": null,
+      "diblokirRegional": null,
+      "bolehKomersial": null,
+      "catatan": "Aktivasi plan gratis BUTUH verifikasi nomor HP (SMS); dukungan +62 belum terkonfirmasi. JEBAKAN: di free tier, data prompt/respons dipakai untuk training secara default (bisa opt-out di setelan). Izin komersial free tier tidak dinyatakan jelas."
+    },
+    "kompatibelOpenAI": true,
+    "endpointCek": "https://api.mistral.ai/v1/models",
+    "sumberData": [
+      "https://docs.mistral.ai/getting-started/quickstarts/studio/activate-and-generate-api-key",
+      "https://help.mistral.ai/en/articles/698531",
+      "https://help.mistral.ai/en/articles/347617"
+    ],
+    "terakhirDiverifikasiManual": "2026-07-12"
+  },
+  {
+    "slug": "huggingface-inference",
+    "nama": "Hugging Face Inference",
+    "website": "https://huggingface.co",
+    "urlDaftar": "https://huggingface.co/join",
+    "deskripsi": "Router inference ke banyak model open-source. Ada kuota kredit gratis bulanan (kecil) lewat akun Hugging Face.",
+    "kategori": ["text", "code", "image", "embedding"],
+    "modelUnggulan": ["GPT-OSS 120B", "DeepSeek V3.1", "DeepSeek R1"],
+    "batasGratis": {
+      "ringkas": "±US$0,10 kredit inference gratis per bulan",
+      "detail": "Akun gratis (non-PRO) dapat sekitar US$0,10 kredit inference per bulan (bisa berubah). Habis kuota → harus beli kredit tambahan. Endpoint /v1 kompatibel OpenAI hanya untuk chat; gambar/embedding lewat InferenceClient HF.",
+      "artiAwam": "Kuota gratisnya kecil — cocok untuk mencicipi banyak model open-source, bukan pemakaian rutin."
+    },
+    "konteksIndonesia": {
+      "butuhKartuKredit": false,
+      "bisaNomorIndonesia": true,
+      "diblokirRegional": false,
+      "bolehKomersial": true,
+      "catatan": "Daftar cukup email, tanpa verifikasi nomor HP. Indonesia tidak diblokir. Pakai Access Token (fine-grained, izin Inference Providers). Model 'gated' perlu menyetujui lisensi di halaman model dulu."
+    },
+    "kompatibelOpenAI": true,
+    "endpointCek": "https://router.huggingface.co/v1/models",
+    "sumberData": [
+      "https://huggingface.co/docs/inference-providers/pricing",
+      "https://huggingface.co/docs/inference-providers/index",
+      "https://huggingface.co/terms-of-service"
+    ],
+    "terakhirDiverifikasiManual": "2026-07-12"
+  },
+  {
+    "slug": "sambanova",
+    "nama": "SambaNova Cloud",
+    "website": "https://sambanova.ai",
+    "urlDaftar": "https://cloud.sambanova.ai",
+    "deskripsi": "Inference cepat untuk model open-source besar. Free tier untuk developer, kompatibel OpenAI.",
+    "kategori": ["text", "code"],
+    "modelUnggulan": ["Llama 3.3 70B", "DeepSeek V3.1", "GPT-OSS 120B"],
+    "batasGratis": {
+      "ringkas": "Free tier: ±20 request/menit, 20 request/hari, 200.000 token/hari per model",
+      "detail": "Free tier (tanpa metode pembayaran): sekitar 20 request/menit, 20 request/HARI, dan 200.000 token/hari per model. Ada kredit awal US$5 yang kedaluwarsa 30 hari. Catatan: Llama 3.1 405B sudah TIDAK ditawarkan.",
+      "artiAwam": "Batas harian sangat ketat (20 request/hari) — pas untuk testing, bukan produksi."
+    },
+    "konteksIndonesia": {
+      "butuhKartuKredit": false,
+      "bisaNomorIndonesia": true,
+      "diblokirRegional": null,
+      "bolehKomersial": null,
+      "catatan": "Daftar dengan email/SSO tanpa kartu kredit. EULA tidak melarang penggunaan komersial secara eksplisit, tapi juga tidak menegaskannya untuk free tier. Ketersediaan region Indonesia belum kami verifikasi resmi."
+    },
+    "kompatibelOpenAI": true,
+    "endpointCek": "https://api.sambanova.ai/v1/models",
+    "sumberData": [
+      "https://docs.sambanova.ai/docs/en/models/rate-limits",
+      "https://docs.sambanova.ai/docs/en/models/sambacloud-models",
+      "https://sambanova.ai/cloud-end-user-license-agreement"
+    ],
+    "terakhirDiverifikasiManual": "2026-07-12"
+  }
+]

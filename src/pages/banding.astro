@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import StatusBadge from '../components/StatusBadge.astro';
+import { providers } from '../lib/providers';
+
+const title = 'Banding provider API AI gratis — modalnol.id';
+const description =
+  'Bandingkan cepat provider API AI gratis: butuh kartu kredit, dukungan nomor +62, izin komersial, dan kompatibilitas OpenAI. (Fase awal — tabel akan diperkaya.)';
+
+function ya(v: boolean | null) {
+  if (v === null) return { t: 'belum', c: 'text-slate-400' };
+  return v ? { t: 'Ya', c: 'text-accent-600 font-semibold' } : { t: 'Tidak', c: 'text-rose-600' };
+}
+---
+
+<Base title={title} description={description} path="/banding">
+  <div class="mx-auto max-w-5xl px-4 py-12">
+    <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+      Banding provider
+    </h1>
+    <p class="mt-3 max-w-2xl text-slate-600 dark:text-slate-300">
+      Tabel ringkas untuk membandingkan syarat pendaftaran tiap provider. Perbandingan mendalam per
+      use case akan hadir di fase berikutnya.
+    </p>
+
+    <div class="mt-8 overflow-x-auto rounded-2xl border border-slate-200 dark:border-slate-800">
+      <table class="w-full min-w-[720px] border-collapse text-left text-sm">
+        <thead
+          class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500 dark:bg-slate-900/50"
+        >
+          <tr>
+            <th class="px-4 py-3 font-semibold">Provider</th>
+            <th class="px-4 py-3 font-semibold">Status</th>
+            <th class="px-4 py-3 font-semibold">Tanpa kartu kredit</th>
+            <th class="px-4 py-3 font-semibold">Nomor +62</th>
+            <th class="px-4 py-3 font-semibold">Komersial</th>
+            <th class="px-4 py-3 font-semibold">OpenAI-compatible</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+          {
+            providers.map((p) => {
+              const k = p.konteksIndonesia;
+              const tanpaCC = ya(k.butuhKartuKredit === null ? null : !k.butuhKartuKredit);
+              const nomor = ya(k.bisaNomorIndonesia);
+              const kom = ya(k.bolehKomersial);
+              return (
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/40">
+                  <td class="px-4 py-3 font-medium">
+                    <a
+                      href={`/provider/${p.slug}`}
+                      class="text-slate-900 hover:text-accent-600 dark:text-white"
+                    >
+                      {p.nama}
+                    </a>
+                  </td>
+                  <td class="px-4 py-3">
+                    <StatusBadge slug={p.slug} />
+                  </td>
+                  <td class:list={['px-4 py-3', tanpaCC.c]}>{tanpaCC.t}</td>
+                  <td class:list={['px-4 py-3', nomor.c]}>{nomor.t}</td>
+                  <td class:list={['px-4 py-3', kom.c]}>{kom.t}</td>
+                  <td class="px-4 py-3">{p.kompatibelOpenAI ? 'Ya' : 'Tidak'}</td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="mt-4 text-xs text-slate-500">
+      "belum" = konteks Indonesia belum kami verifikasi. Kami tidak mengarang data.
+    </p>
+  </div>
+</Base>

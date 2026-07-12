@@ -1,0 +1,157 @@
+---
+import { kategoriTersedia, LABEL_KATEGORI } from '../lib/providers';
+---
+
+<div
+  class="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/50"
+  id="filterbar"
+>
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <label class="relative flex-1 sm:max-w-xs">
+        <span class="sr-only">Cari provider</span>
+        <input
+          type="search"
+          id="filter-search"
+          placeholder="Cari provider… (mis. Groq, Gemini)"
+          class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:border-accent-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+          autocomplete="off"
+        />
+      </label>
+
+      <div class="flex flex-wrap gap-4">
+        <label class="flex cursor-pointer items-center gap-2 text-sm font-medium">
+          <input
+            type="checkbox"
+            id="filter-cc"
+            class="h-4 w-4 rounded border-slate-300 text-accent-600 focus:ring-accent-500"
+          />
+          Tanpa kartu kredit
+        </label>
+        <label class="flex cursor-pointer items-center gap-2 text-sm font-medium">
+          <input
+            type="checkbox"
+            id="filter-komersial"
+            class="h-4 w-4 rounded border-slate-300 text-accent-600 focus:ring-accent-500"
+          />
+          Boleh komersial
+        </label>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2" role="group" aria-label="Filter kategori">
+      <span class="text-xs font-semibold uppercase tracking-wide text-slate-500">Kategori:</span>
+      <button
+        type="button"
+        class="kategori-btn is-active rounded-full border px-3 py-1 text-xs font-medium transition"
+        data-kategori="semua">Semua</button
+      >
+      {
+        kategoriTersedia.map((kat) => (
+          <button
+            type="button"
+            class="kategori-btn rounded-full border px-3 py-1 text-xs font-medium transition"
+            data-kategori={kat}
+          >
+            {LABEL_KATEGORI[kat]}
+          </button>
+        ))
+      }
+    </div>
+
+    <p class="text-xs text-slate-500" id="filter-count" aria-live="polite"></p>
+  </div>
+</div>
+
+<script>
+  // Filter direktori sepenuhnya client-side. Tanpa framework.
+  const grid = document.getElementById('direktori-grid');
+  const cards = Array.from(document.querySelectorAll<HTMLElement>('.provider-card'));
+  const searchEl = document.getElementById('filter-search') as HTMLInputElement | null;
+  const ccEl = document.getElementById('filter-cc') as HTMLInputElement | null;
+  const komersialEl = document.getElementById('filter-komersial') as HTMLInputElement | null;
+  const countEl = document.getElementById('filter-count');
+  const kategoriBtns = Array.from(document.querySelectorAll<HTMLButtonElement>('.kategori-btn'));
+
+  let kategoriAktif = 'semua';
+
+  function terapkan() {
+    const q = (searchEl?.value ?? '').trim().toLowerCase();
+    const hanyaTanpaCC = ccEl?.checked ?? false;
+    const hanyaKomersial = komersialEl?.checked ?? false;
+    let terlihat = 0;
+
+    for (const card of cards) {
+      const kategori = (card.dataset.kategori ?? '').split(',');
+      const nama = card.dataset.nama ?? '';
+      const tanpaCC = card.dataset.tanpaCc === 'ya';
+      const komersial = card.dataset.komersial === 'ya';
+
+      const cocokKategori = kategoriAktif === 'semua' || kategori.includes(kategoriAktif);
+      const cocokCari = q === '' || nama.includes(q);
+      const cocokCC = !hanyaTanpaCC || tanpaCC;
+      const cocokKomersial = !hanyaKomersial || komersial;
+
+      const tampil = cocokKategori && cocokCari && cocokCC && cocokKomersial;
+      card.style.display = tampil ? '' : 'none';
+      if (tampil) terlihat++;
+    }
+
+    if (countEl) {
+      countEl.textContent = `Menampilkan ${terlihat} dari ${cards.length} provider.`;
+    }
+    if (grid) {
+      let kosong = grid.querySelector<HTMLElement>('[data-empty]');
+      if (terlihat === 0) {
+        if (!kosong) {
+          kosong = document.createElement('p');
+          kosong.dataset.empty = 'true';
+          kosong.className =
+            'col-span-full rounded-xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500 dark:border-slate-700';
+          kosong.textContent = 'Tidak ada provider yang cocok dengan filter ini.';
+          grid.appendChild(kosong);
+        }
+      } else if (kosong) {
+        kosong.remove();
+      }
+    }
+  }
+
+  for (const btn of kategoriBtns) {
+    btn.addEventListener('click', () => {
+      kategoriAktif = btn.dataset.kategori ?? 'semua';
+      for (const b of kategoriBtns) b.classList.toggle('is-active', b === btn);
+      terapkan();
+    });
+  }
+  searchEl?.addEventListener('input', terapkan);
+  ccEl?.addEventListener('change', terapkan);
+  komersialEl?.addEventListener('change', terapkan);
+
+  terapkan();
+</script>
+
+<style>
+  .kategori-btn {
+    border-color: rgb(203 213 225);
+    color: rgb(71 85 105);
+  }
+  :global(.dark) .kategori-btn,
+  .kategori-btn {
+    background: transparent;
+  }
+  .kategori-btn.is-active {
+    background: var(--color-accent-500, #10b981);
+    border-color: var(--color-accent-500, #10b981);
+    color: #fff;
+  }
+  @media (prefers-color-scheme: dark) {
+    .kategori-btn {
+      border-color: rgb(51 65 85);
+      color: rgb(148 163 184);
+    }
+    .kategori-btn.is-active {
+      color: #fff;
+    }
+  }
+</style>

@@ -1,0 +1,59 @@
+---
+// Badge status dari health check (src/data/status.json).
+import status from '../data/status.json';
+
+export interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+
+const results = (status.results ?? {}) as Record<string, string>;
+const state = results[slug] ?? 'unknown';
+const generatedAt = status.generatedAt as string | null;
+
+// Format tanggal ID (tanpa Date.now — pakai nilai dari status.json apa adanya).
+let tanggalCek: string | null = null;
+if (generatedAt) {
+  try {
+    tanggalCek = new Intl.DateTimeFormat('id-ID', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    }).format(new Date(generatedAt));
+  } catch {
+    tanggalCek = null;
+  }
+}
+
+const map: Record<string, { label: string; cls: string; dot: string }> = {
+  up: {
+    label: tanggalCek ? `✓ dicek ${tanggalCek}` : '✓ endpoint hidup',
+    cls: 'bg-accent-50 text-accent-700 ring-accent-600/20 dark:bg-accent-500/10 dark:text-accent-400 dark:ring-accent-400/20',
+    dot: 'bg-accent-500',
+  },
+  down: {
+    label: 'endpoint bermasalah',
+    cls: 'bg-rose-50 text-rose-700 ring-rose-600/20 dark:bg-rose-500/10 dark:text-rose-400 dark:ring-rose-400/20',
+    dot: 'bg-rose-500',
+  },
+  unknown: {
+    label: 'belum dicek',
+    cls: 'bg-slate-100 text-slate-500 ring-slate-500/20 dark:bg-slate-800 dark:text-slate-400 dark:ring-slate-600/30',
+    dot: 'bg-slate-400',
+  },
+};
+
+const s = map[state] ?? map.unknown;
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset',
+    s.cls,
+  ]}
+  title="Status ini diperbarui otomatis oleh health check harian."
+>
+  <span class:list={['h-1.5 w-1.5 rounded-full', s.dot]} aria-hidden="true"></span>
+  {s.label}
+</span>

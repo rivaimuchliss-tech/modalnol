@@ -1,0 +1,227 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import StatusBadge from '../../components/StatusBadge.astro';
+import IndoBadges from '../../components/IndoBadges.astro';
+import { providers } from '../../lib/providers';
+import { LABEL_KATEGORI } from '../../lib/providers';
+
+export async function getStaticPaths() {
+  const panduan = await getCollection('panduan');
+  return providers.map((provider) => {
+    const guide = panduan.find((e) => e.data.slug === provider.slug);
+    return {
+      params: { slug: provider.slug },
+      props: { provider, guide },
+    };
+  });
+}
+
+const { provider, guide } = Astro.props;
+const k = provider.konteksIndonesia;
+
+const { Content } = guide ? await render(guide) : { Content: null };
+
+// Tanggal verifikasi manual (format ID).
+let tglVerif = provider.terakhirDiverifikasiManual;
+try {
+  tglVerif = new Intl.DateTimeFormat('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(new Date(provider.terakhirDiverifikasiManual));
+} catch {
+  // biarkan string asli
+}
+
+const title = `Cara daftar & pakai ${provider.nama} gratis — Panduan Bahasa Indonesia | modalnol.id`;
+const description = `Panduan lengkap ${provider.nama}: cara daftar, ambil API key, contoh kode Python & JavaScript, arti kuota gratis, dan jebakan umum. ${provider.deskripsi}`;
+
+// FAQPage schema.org untuk SEO.
+const faq = [
+  {
+    q: `Apakah ${provider.nama} butuh kartu kredit?`,
+    a:
+      k.butuhKartuKredit === null
+        ? 'Belum kami verifikasi.'
+        : k.butuhKartuKredit
+          ? 'Ya, kartu kredit dibutuhkan.'
+          : 'Tidak, tier gratisnya bisa dipakai tanpa kartu kredit.',
+  },
+  {
+    q: `Apakah ${provider.nama} boleh dipakai untuk keperluan komersial di free tier?`,
+    a:
+      k.bolehKomersial === null
+        ? 'Belum kami verifikasi — cek Terms of Service resmi.'
+        : k.bolehKomersial
+          ? 'Umumnya boleh, tetapi tetap cek Terms of Service resmi.'
+          : 'Tidak — free tier ditujukan untuk eksperimen/pengembangan, bukan produksi.',
+  },
+  {
+    q: `Apa arti kuota gratis ${provider.nama} untuk pengguna awam?`,
+    a: provider.batasGratis.artiAwam,
+  },
+];
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  path={`/provider/${provider.slug}`}
+  jsonLd={jsonLd}
+>
+  <article class="mx-auto max-w-3xl px-4 py-10">
+    <nav class="mb-6 text-sm text-slate-500" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-accent-600">Beranda</a>
+      <span class="mx-1">/</span>
+      <a href="/#direktori" class="hover:text-accent-600">Direktori</a>
+      <span class="mx-1">/</span>
+      <span class="text-slate-700 dark:text-slate-300">{provider.nama}</span>
+    </nav>
+
+    <header class="mb-8">
+      <div class="mb-3 flex flex-wrap items-center gap-3">
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+          {provider.nama}
+        </h1>
+        <StatusBadge slug={provider.slug} />
+      </div>
+      <p class="text-lg text-slate-600 dark:text-slate-300">{provider.deskripsi}</p>
+
+      <div class="mt-5 flex flex-wrap gap-2">
+        {
+          provider.kategori.map((kat) => (
+            <span class="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">
+              {LABEL_KATEGORI[kat]}
+            </span>
+          ))
+        }
+        {
+          provider.kompatibelOpenAI && (
+            <span class="rounded-md bg-accent-50 px-2 py-0.5 text-xs font-medium text-accent-700 dark:bg-accent-500/10 dark:text-accent-400">
+              OpenAI-compatible
+            </span>
+          )
+        }
+      </div>
+    </header>
+
+    <!-- Badge konteks Indonesia (dari providers.json) -->
+    <section
+      class="mb-8 rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/50"
+    >
+      <h2 class="mb-3 text-sm font-bold uppercase tracking-wide text-slate-500">
+        🇮🇩 Konteks Indonesia
+      </h2>
+      <IndoBadges data={k} variant="penuh" />
+    </section>
+
+    <!-- Ringkasan cepat -->
+    <section class="mb-8 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+        <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Model unggulan</h3>
+        <ul class="mt-2 space-y-1 text-sm text-slate-600 dark:text-slate-400">
+          {provider.modelUnggulan.map((m) => <li>• {m}</li>)}
+        </ul>
+      </div>
+      <div class="rounded-xl border border-slate-200 p-4 dark:border-slate-800">
+        <h3 class="text-sm font-semibold text-slate-900 dark:text-white">Batas gratis</h3>
+        <p class="mt-2 text-sm text-slate-600 dark:text-slate-400">
+          {provider.batasGratis.ringkas}
+        </p>
+        <p class="mt-2 text-sm text-slate-500">{provider.batasGratis.detail}</p>
+        <p class="mt-2 rounded-lg bg-accent-50 px-3 py-2 text-sm text-accent-800 dark:bg-accent-500/10 dark:text-accent-300">
+          💡 {provider.batasGratis.artiAwam}
+        </p>
+      </div>
+    </section>
+
+    <div class="flex flex-wrap gap-3">
+      <a
+        href={provider.urlDaftar}
+        target="_blank"
+        rel="noopener nofollow"
+        class="rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-600"
+        >Daftar di {provider.nama} ↗</a
+      >
+      <a
+        href={provider.website}
+        target="_blank"
+        rel="noopener nofollow"
+        class="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-slate-400 dark:border-slate-700 dark:text-slate-200"
+        >Situs resmi ↗</a
+      >
+    </div>
+
+    <!-- Panduan (dari Markdown) -->
+    <div class="prose-modalnol mt-10 text-slate-700 dark:text-slate-300">
+      {
+        Content ? (
+          <Content />
+        ) : (
+          <p class="rounded-xl border border-dashed border-slate-300 p-6 text-slate-500 dark:border-slate-700">
+            Panduan detail untuk provider ini sedang disiapkan.
+          </p>
+        )
+      }
+    </div>
+
+    <!-- Sumber & verifikasi -->
+    <footer class="mt-12 rounded-2xl border border-slate-200 p-5 text-sm dark:border-slate-800">
+      <h2 class="font-semibold text-slate-900 dark:text-white">Sumber data & verifikasi</h2>
+      <p class="mt-2 text-slate-600 dark:text-slate-400">
+        Terakhir diverifikasi manual: <strong>{tglVerif}</strong>. Angka rate limit bisa berubah —
+        selalu cek sumber resmi berikut:
+      </p>
+      <ul class="mt-2 space-y-1">
+        {
+          provider.sumberData.map((url) => (
+            <li>
+              <a
+                href={url}
+                target="_blank"
+                rel="noopener nofollow"
+                class="text-accent-600 underline underline-offset-2 hover:text-accent-700"
+              >
+                {url}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </footer>
+  </article>
+
+  <script>
+    // Tombol "Salin" untuk tiap blok kode di panduan.
+    for (const pre of document.querySelectorAll<HTMLElement>('.prose-modalnol pre')) {
+      pre.style.position = 'relative';
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.textContent = 'Salin';
+      btn.className =
+        'absolute right-2 top-2 rounded-md bg-slate-700/80 px-2 py-1 text-xs text-white hover:bg-slate-600';
+      btn.addEventListener('click', async () => {
+        const code = pre.querySelector('code')?.innerText ?? pre.innerText;
+        try {
+          await navigator.clipboard.writeText(code);
+          btn.textContent = 'Tersalin ✓';
+          setTimeout(() => (btn.textContent = 'Salin'), 1500);
+        } catch {
+          btn.textContent = 'Gagal';
+        }
+      });
+      pre.appendChild(btn);
+    }
+  </script>
+</Base>

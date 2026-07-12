@@ -1,0 +1,81 @@
+---
+import Base from '../layouts/Base.astro';
+
+const title = 'Tentang modalnol.id — Direktori API AI Gratis Indonesia';
+const description =
+  'Apa itu modalnol.id, bagaimana kami menjaga kesegaran data, disclaimer penting, dan cara kamu ikut berkontribusi.';
+---
+
+<Base title={title} description={description} path="/tentang">
+  <div class="mx-auto max-w-3xl px-4 py-12">
+    <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+      Tentang modalnol.id
+    </h1>
+    <p class="mt-4 text-lg text-slate-600 dark:text-slate-300">
+      modalnol.id membantu developer Indonesia dengan bujet minim — mahasiswa, indie hacker, pemula
+      — berangkat dari nol sampai berhasil memanggil API AI gratis pertamanya.
+    </p>
+
+    <div class="prose-modalnol mt-8 text-slate-700 dark:text-slate-300">
+      <h2>Kenapa ada situs ini?</h2>
+      <p>
+        Banyak provider menawarkan API AI gratis, tapi informasinya berserakan, berbahasa Inggris,
+        dan sering basi. Kami merangkumnya dalam bahasa Indonesia, menambahkan konteks lokal, dan
+        menjaganya tetap segar.
+      </p>
+
+      <h2>Tiga hal yang kami janjikan</h2>
+      <ul>
+        <li>
+          <strong>Konteks Indonesia.</strong> Tiap provider dilabeli: butuh kartu kredit? bisa
+          daftar pakai nomor +62? kena blokir regional? boleh dipakai komersial?
+        </li>
+        <li>
+          <strong>Onboarding, bukan sekadar daftar.</strong> Tiap provider punya panduan "dari nol
+          sampai jalan" — langkah daftar, cara ambil API key, dan contoh kode siap copy.
+        </li>
+        <li>
+          <strong>Kesegaran yang bisa dibuktikan.</strong> Health check otomatis harian plus tanggal
+          verifikasi manual dan link sumber resmi di tiap klaim.
+        </li>
+      </ul>
+
+      <h2>Cara kami menjaga data tetap segar</h2>
+      <p>
+        Sebuah GitHub Action berjalan otomatis tiap hari (sekitar 05.00 WIB) untuk menyapa endpoint
+        tiap provider dan mencatat apakah layanannya hidup. Hasilnya disimpan ke
+        <code>status.json</code> dan memicu situs untuk di-build ulang. Angka rate limit tetap kami
+        verifikasi manual dan selalu menautkan dokumentasi resmi.
+      </p>
+
+      <blockquote>
+        <strong>Disclaimer.</strong> Rate limit, ketersediaan, dan syarat free tier tiap provider
+        bisa berubah sewaktu-waktu tanpa pemberitahuan. Angka di situs ini adalah panduan, bukan
+        janji. Selalu verifikasi ke dokumentasi resmi provider sebelum mengandalkannya untuk proyek
+        seriusmu.
+      </blockquote>
+
+      <h2>Yang BUKAN kami</h2>
+      <p>
+        modalnol.id adalah <strong>direktori &amp; edukasi</strong>, <strong>bukan proxy API</strong>.
+        Kami tidak pernah meneruskan request AI-mu lewat server kami (itu melanggar ToS provider).
+        Playground yang direncanakan ke depan akan memakai pola BYOK (bring your own key) — API
+        key-mu hanya disimpan di browser, tidak pernah dikirim ke server kami.
+      </p>
+
+      <h2>Ikut berkontribusi</h2>
+      <p>
+        Menemukan data yang sudah basi, provider baru yang layak masuk, atau salah ketik di panduan?
+        Semua data ada di repositori GitHub kami. Kirim
+        <a href="https://github.com/modalnol/modalnol" rel="noopener">Pull Request</a> atau buka
+        issue — kontribusi kecil sekalipun sangat berarti untuk komunitas.
+      </p>
+
+      <h2>Privasi</h2>
+      <p>
+        Kami memakai Cloudflare Web Analytics yang tidak memakai cookie dan tidak melacak identitas
+        pribadimu.
+      </p>
+    </div>
+  </div>
+</Base>
