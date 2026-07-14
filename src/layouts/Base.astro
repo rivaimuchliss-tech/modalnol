@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { CF_ANALYTICS_TOKEN } from '../config';
 
 export interface Props {
   title: string;
@@ -15,7 +16,7 @@ const {
   title,
   description,
   path = '/',
-  ogImage = '/og-image.svg',
+  ogImage = '/og-image.png',
   jsonLd,
 } = Astro.props;
 
@@ -47,6 +48,9 @@ const tahun = 2026;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:locale" content="id_ID" />
 
     <!-- Twitter -->
@@ -65,7 +69,16 @@ const tahun = 2026;
 
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 
-    <!-- Cloudflare Web Analytics dipasang saat deploy (tanpa cookie). Lihat tentang.astro. -->
+    <!-- Cloudflare Web Analytics (tanpa cookie). Aktif bila CF_ANALYTICS_TOKEN diisi di src/config.ts -->
+    {
+      CF_ANALYTICS_TOKEN && (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={`{"token": "${CF_ANALYTICS_TOKEN}"}`}
+        />
+      )
+    }
   </head>
   <body class="flex min-h-screen flex-col font-sans">
     <header
@@ -81,6 +94,7 @@ const tahun = 2026;
         </a>
         <nav class="flex items-center gap-4 text-sm font-medium" aria-label="Navigasi utama">
           <a class="hover:text-accent-600" href="/#direktori">Direktori</a>
+          <a class="hover:text-accent-600" href="/playground">Playground</a>
           <a class="hover:text-accent-600" href="/banding">Banding</a>
           <a class="hover:text-accent-600" href="/tentang">Tentang</a>
           <a
@@ -156,6 +170,7 @@ const tahun = 2026;
           </div>
           <nav aria-label="Tautan footer" class="flex flex-col gap-2">
             <a class="hover:text-accent-600" href="/#direktori">Direktori provider</a>
+            <a class="hover:text-accent-600" href="/playground">Playground BYOK</a>
             <a class="hover:text-accent-600" href="/banding">Perbandingan</a>
             <a class="hover:text-accent-600" href="/tentang">Tentang &amp; disclaimer</a>
             <a

@@ -1,0 +1,308 @@
+---
+import Base from '../layouts/Base.astro';
+import { providers } from '../lib/providers';
+
+// Konfigurasi playground: base URL + model default per provider (OpenAI-compatible).
+// Cloudflare dikecualikan (butuh Account ID di URL). Model bisa diedit user.
+const PLAYGROUND: Record<string, { baseUrl: string; model: string; keyHint: string }> = {
+  'google-ai-studio': {
+    baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
+    model: 'gemini-2.5-flash',
+    keyHint: 'API key dari aistudio.google.com/apikey',
+  },
+  groq: {
+    baseUrl: 'https://api.groq.com/openai/v1',
+    model: 'llama-3.3-70b-versatile',
+    keyHint: 'API key dari console.groq.com',
+  },
+  openrouter: {
+    baseUrl: 'https://openrouter.ai/api/v1',
+    model: 'deepseek/deepseek-chat-v3-0324:free',
+    keyHint: 'Key sk-or-... dari openrouter.ai/keys (pakai model :free)',
+  },
+  cerebras: {
+    baseUrl: 'https://api.cerebras.ai/v1',
+    model: 'gpt-oss-120b',
+    keyHint: 'API key dari cloud.cerebras.ai',
+  },
+  'nvidia-nim': {
+    baseUrl: 'https://integrate.api.nvidia.com/v1',
+    model: 'meta/llama-3.3-70b-instruct',
+    keyHint: 'Key nvapi-... dari build.nvidia.com',
+  },
+  'github-models': {
+    baseUrl: 'https://models.github.ai/inference',
+    model: 'openai/gpt-4o-mini',
+    keyHint: 'Personal Access Token (izin models) dari GitHub',
+  },
+  'mistral-ai': {
+    baseUrl: 'https://api.mistral.ai/v1',
+    model: 'mistral-small-latest',
+    keyHint: 'API key dari console.mistral.ai',
+  },
+  'huggingface-inference': {
+    baseUrl: 'https://router.huggingface.co/v1',
+    model: 'openai/gpt-oss-120b',
+    keyHint: 'Access Token hf_... dari huggingface.co/settings/tokens',
+  },
+  sambanova: {
+    baseUrl: 'https://api.sambanova.ai/v1',
+    model: 'Meta-Llama-3.3-70B-Instruct',
+    keyHint: 'API key dari cloud.sambanova.ai',
+  },
+};
+
+const daftar = providers
+  .filter((p) => PLAYGROUND[p.slug])
+  .map((p) => ({ slug: p.slug, nama: p.nama, ...PLAYGROUND[p.slug] }));
+
+const title = 'Playground BYOK — Tes API AI Gratis di Browser | modalnol.id';
+const description =
+  'Tes API key AI-mu langsung dari browser. Key hanya disimpan di perangkatmu, tidak pernah dikirim ke server modalnol.id. Pilih provider, tempel key, kirim prompt.';
+---
+
+<Base title={title} description={description} path="/playground">
+  <div class="mx-auto max-w-3xl px-4 py-10">
+    <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+      Playground <span class="text-accent-500">BYOK</span>
+    </h1>
+    <p class="mt-3 text-lg text-slate-600 dark:text-slate-300">
+      Tes API key-mu langsung dari sini. Pilih provider, tempel key, kirim prompt — lihat balasannya
+      tanpa nulis kode.
+    </p>
+
+    <!-- Banner privasi -->
+    <div
+      class="mt-5 flex items-start gap-3 rounded-2xl border border-accent-200 bg-accent-50 p-4 text-sm dark:border-accent-500/30 dark:bg-accent-500/10"
+    >
+      <span class="text-lg" aria-hidden="true">🔒</span>
+      <p class="text-accent-800 dark:text-accent-200">
+        <strong>Key-mu aman.</strong> API key hanya disimpan di browser ini (localStorage) dan dikirim
+        <strong>langsung</strong> dari perangkatmu ke server provider. modalnol.id
+        <strong>bukan proxy</strong> — key-mu tidak pernah lewat atau tersimpan di server kami. Hindari
+        pakai di komputer umum.
+      </p>
+    </div>
+
+    <!-- Form -->
+    <div class="mt-6 space-y-4 rounded-2xl border border-slate-200 p-5 dark:border-slate-800">
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="block">
+          <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">Provider</span>
+          <select
+            id="pg-provider"
+            class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+          >
+            {
+              daftar.map((d) => (
+                <option
+                  value={d.slug}
+                  data-baseurl={d.baseUrl}
+                  data-model={d.model}
+                  data-keyhint={d.keyHint}
+                >
+                  {d.nama}
+                </option>
+              ))
+            }
+          </select>
+        </label>
+
+        <label class="block">
+          <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">Model</span>
+          <input
+            id="pg-model"
+            type="text"
+            spellcheck="false"
+            class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+          />
+        </label>
+      </div>
+
+      <label class="block">
+        <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">API key</span>
+        <div class="mt-1 flex gap-2">
+          <input
+            id="pg-key"
+            type="password"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="tempel API key-mu di sini"
+            class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+          />
+          <button
+            type="button"
+            id="pg-toggle-key"
+            class="rounded-lg border border-slate-300 px-3 text-sm dark:border-slate-700"
+            aria-label="Tampilkan/sembunyikan key">👁</button
+          >
+        </div>
+        <span id="pg-keyhint" class="mt-1 block text-xs text-slate-500"></span>
+        <label class="mt-2 flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+          <input id="pg-remember" type="checkbox" class="h-3.5 w-3.5 rounded" checked />
+          Ingat key di browser ini (localStorage)
+        </label>
+      </label>
+
+      <label class="block">
+        <span class="text-sm font-semibold text-slate-700 dark:text-slate-200">Prompt</span>
+        <textarea
+          id="pg-prompt"
+          rows="3"
+          class="mt-1 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm dark:border-slate-700 dark:bg-slate-950 dark:text-white"
+          placeholder="Tulis pertanyaan atau perintah…">Halo! Sebutkan 3 ide proyek coding untuk pemula.</textarea
+        >
+      </label>
+
+      <div class="flex flex-wrap items-center gap-3">
+        <button
+          type="button"
+          id="pg-send"
+          class="rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-600 disabled:opacity-50"
+          >Kirim ↵</button
+        >
+        <button
+          type="button"
+          id="pg-clear-key"
+          class="text-xs text-slate-500 underline underline-offset-2 hover:text-rose-600"
+          >Hapus key tersimpan</button
+        >
+        <span id="pg-status" class="text-xs text-slate-500"></span>
+      </div>
+    </div>
+
+    <!-- Output -->
+    <div id="pg-output-wrap" class="mt-6 hidden">
+      <h2 class="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">Balasan</h2>
+      <div
+        id="pg-output"
+        class="prose-modalnol max-w-none whitespace-pre-wrap rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm dark:border-slate-800 dark:bg-slate-900/50"
+      >
+      </div>
+    </div>
+
+    <p class="mt-6 text-xs text-slate-500">
+      Catatan: sebagian provider memblokir panggilan langsung dari browser (CORS). Kalau muncul error
+      koneksi, provider itu memang tidak mengizinkan pemanggilan dari halaman web — pakai contoh kode
+      di halaman panduannya. Cloudflare Workers AI tidak ada di sini karena butuh Account ID.
+    </p>
+  </div>
+
+  <script>
+    const providerEl = document.getElementById('pg-provider') as HTMLSelectElement;
+    const modelEl = document.getElementById('pg-model') as HTMLInputElement;
+    const keyEl = document.getElementById('pg-key') as HTMLInputElement;
+    const keyHintEl = document.getElementById('pg-keyhint') as HTMLElement;
+    const rememberEl = document.getElementById('pg-remember') as HTMLInputElement;
+    const promptEl = document.getElementById('pg-prompt') as HTMLTextAreaElement;
+    const sendEl = document.getElementById('pg-send') as HTMLButtonElement;
+    const clearKeyEl = document.getElementById('pg-clear-key') as HTMLButtonElement;
+    const toggleKeyEl = document.getElementById('pg-toggle-key') as HTMLButtonElement;
+    const statusEl = document.getElementById('pg-status') as HTMLElement;
+    const outWrap = document.getElementById('pg-output-wrap') as HTMLElement;
+    const outEl = document.getElementById('pg-output') as HTMLElement;
+
+    const keyStore = (slug: string) => `modalnol_key_${slug}`;
+
+    function selectedOption() {
+      return providerEl.options[providerEl.selectedIndex];
+    }
+
+    function syncProvider() {
+      const opt = selectedOption();
+      modelEl.value = opt.dataset.model ?? '';
+      keyHintEl.textContent = opt.dataset.keyhint ?? '';
+      // muat key tersimpan untuk provider ini
+      const saved = localStorage.getItem(keyStore(providerEl.value));
+      keyEl.value = saved ?? '';
+    }
+
+    function setStatus(msg: string, tone: 'info' | 'error' | 'ok' = 'info') {
+      statusEl.textContent = msg;
+      statusEl.style.color =
+        tone === 'error' ? '#e11d48' : tone === 'ok' ? '#059669' : '';
+    }
+
+    async function kirim() {
+      const opt = selectedOption();
+      const baseUrl = opt.dataset.baseurl ?? '';
+      const model = modelEl.value.trim();
+      const key = keyEl.value.trim();
+      const prompt = promptEl.value.trim();
+
+      if (!key) return setStatus('Tempel API key dulu.', 'error');
+      if (!prompt) return setStatus('Isi prompt dulu.', 'error');
+
+      // simpan / hapus key sesuai pilihan
+      if (rememberEl.checked) localStorage.setItem(keyStore(providerEl.value), key);
+      else localStorage.removeItem(keyStore(providerEl.value));
+
+      sendEl.disabled = true;
+      setStatus('Mengirim…');
+      outWrap.classList.remove('hidden');
+      outEl.textContent = '';
+
+      try {
+        const res = await fetch(`${baseUrl}/chat/completions`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${key}`,
+          },
+          body: JSON.stringify({
+            model,
+            messages: [{ role: 'user', content: prompt }],
+            max_tokens: 800,
+          }),
+        });
+
+        const text = await res.text();
+        let data: any = null;
+        try {
+          data = JSON.parse(text);
+        } catch {
+          /* biarkan text mentah */
+        }
+
+        if (!res.ok) {
+          const errMsg =
+            data?.error?.message || data?.message || text || `HTTP ${res.status}`;
+          outEl.textContent = `⚠️ Error ${res.status}: ${errMsg}`;
+          setStatus('Provider menolak request.', 'error');
+          return;
+        }
+
+        const content =
+          data?.choices?.[0]?.message?.content ??
+          data?.choices?.[0]?.text ??
+          '(tidak ada konten pada respons)';
+        outEl.textContent = content;
+        setStatus('Sukses ✓', 'ok');
+      } catch (err) {
+        // fetch gagal total = biasanya CORS / jaringan
+        outEl.textContent =
+          '⚠️ Gagal terhubung. Kemungkinan besar provider ini memblokir panggilan langsung dari browser (CORS), ' +
+          'atau key/koneksi bermasalah. Coba provider lain, atau ikuti contoh kode di halaman panduan provider ini.';
+        setStatus('Gagal terhubung (kemungkinan CORS).', 'error');
+      } finally {
+        sendEl.disabled = false;
+      }
+    }
+
+    providerEl.addEventListener('change', syncProvider);
+    sendEl.addEventListener('click', kirim);
+    clearKeyEl.addEventListener('click', () => {
+      localStorage.removeItem(keyStore(providerEl.value));
+      keyEl.value = '';
+      setStatus('Key tersimpan dihapus.', 'ok');
+    });
+    toggleKeyEl.addEventListener('click', () => {
+      keyEl.type = keyEl.type === 'password' ? 'text' : 'password';
+    });
+    promptEl.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') kirim();
+    });
+
+    syncProvider();
+  </script>
+</Base>
