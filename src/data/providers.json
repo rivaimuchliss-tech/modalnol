@@ -285,5 +285,34 @@
       "https://sambanova.ai/cloud-end-user-license-agreement"
     ],
     "terakhirDiverifikasiManual": "2026-07-12"
+  },
+  {
+    "slug": "ai-router",
+    "nama": "AI-ROUTER",
+    "website": "https://ai-router.dev/id/",
+    "urlDaftar": "https://ai-router.dev/id/",
+    "deskripsi": "Gateway API independen yang kompatibel dengan OpenAI untuk memakai model AI melalui satu endpoint. Akun baru yang memenuhi syarat memiliki bonus pendaftaran dan reward check-in harian.",
+    "kategori": ["text", "code"],
+    "modelUnggulan": ["Katalog model dinamis di dashboard", "Endpoint kompatibel OpenAI"],
+    "batasGratis": {
+      "ringkas": "Untuk akun baru biasa yang memenuhi syarat: bonus tersedia 5U; bonus beku 15U dilepas bertahap saat API benar-benar digunakan.",
+      "detail": "Dokumentasi publik menyebut 5U tersedia setelah pendaftaran untuk akun baru biasa yang memenuhi syarat. Tambahan 15U adalah bonus beku yang tidak langsung tersedia penuh dan dilepas seiring penggunaan API nyata. Check-in harian: $1 + 2% dari total penggunaan hari sebelumnya, maksimum $10. Akun yang dinilai berisiko tinggi dapat memperoleh bonus pendaftaran berbeda.",
+      "artiAwam": "Bisa dipakai untuk mencoba alur API yang kompatibel dengan OpenAI. Periksa dashboard dan syarat penghargaan sebelum mengandalkan bonus untuk penggunaan produksi."
+    },
+    "konteksIndonesia": {
+      "butuhKartuKredit": null,
+      "bisaNomorIndonesia": null,
+      "diblokirRegional": null,
+      "bolehKomersial": null,
+      "catatan": "Ketersediaan dari Indonesia, kebutuhan kartu kredit atau nomor +62, serta ketentuan penggunaan komersial belum diverifikasi terpisah untuk direktori ini. Periksa halaman resmi dan ketentuan layanan sebelum memakai API."
+    },
+    "kompatibelOpenAI": true,
+    "endpointCek": "https://api.ai-router.dev/v1/models",
+    "sumberData": [
+      "https://ai-router.dev/id/",
+      "https://ai-router.dev/id/openai-compatible-api-gateway/",
+      "https://ai-router.dev/id/docs/billing-quota/rewards-and-affiliate-commissions/"
+    ],
+    "terakhirDiverifikasiManual": "2026-07-22"
   }
 ]
